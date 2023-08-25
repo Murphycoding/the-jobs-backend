@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
+import java.lang.String;
+import java.util.Optional;
 
 @Entity
 @Table(name = "job_seekers",
@@ -23,7 +24,7 @@ public class JobSeeker {
     @Size(max = 255)
     private String address;
     @NotBlank
-    private Date dob;
+    private String dob;
     @NotBlank
     @Size(max = 12)
     private String  nic;
@@ -33,8 +34,72 @@ public class JobSeeker {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToOne
-    @JoinColumn(name = "job_seeker_id")
-    private JobSeeker jobSeeker;
+    public JobSeeker(String tp, String address, String dob, String nic, String gender, User user) {
+        this.tp = tp;
+        this.address = address;
+        this.dob = dob;
+        this.nic = nic;
+        this.gender = gender;
+        this.user = user;
+    }
 
+    public JobSeeker() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTp() {
+        return tp;
+    }
+
+    public void setTp(String tp) {
+        this.tp = tp;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getNic() {
+        return nic;
+    }
+
+    public void setNic(String nic) {
+        this.nic = nic;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
