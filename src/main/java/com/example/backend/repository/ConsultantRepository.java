@@ -8,4 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ConsultantRepository extends JpaRepository<Consultant, Long> {
+    Optional<Consultant> findByUser(User user);
 }
