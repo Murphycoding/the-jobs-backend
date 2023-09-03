@@ -43,20 +43,23 @@ public class JobSeekerController {
     @PostMapping("/save")
     @PreAuthorize("hasRole('jOB_SEEKER')")
     public Object save(HttpServletRequest request , @RequestBody JobSeekerRequest jobSeekerRequest){
-
         String token = jwtUtils.getJwtFromCookies(request);
         String username = jwtUtils.getUserNameFromJwtToken(token);
         Optional<User> user = userRepository.findByUsername(username);
 
         JobSeeker jobSeeker = new JobSeeker(
-                jobSeekerRequest.getTp(),
+                jobSeekerRequest.getFirst_name(),
+                jobSeekerRequest.getLast_name(),
+                jobSeekerRequest.getContact_number(),
                 jobSeekerRequest.getAddress(),
                 jobSeekerRequest.getDob(),
                 jobSeekerRequest.getNic(),
                 jobSeekerRequest.getGender(),
+                jobSeekerRequest.getJob_type(),
                 user.orElse(new User())
         );
-//        return jobSeeker;
+//        return "work";
+
         return jobSeekerRepository.save(jobSeeker);
     }
 }

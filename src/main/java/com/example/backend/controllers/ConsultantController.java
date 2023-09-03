@@ -47,11 +47,14 @@ public class ConsultantController {
         Consultant consultant = new Consultant(
                 consultantRequest.getSpecialized_area(),
                 consultantRequest.getSpecialized_country(),
-                consultantRequest.getTp(),
+                consultantRequest.getFirst_name(),
+                consultantRequest.getLast_name(),
+                consultantRequest.getContact_number(),
                 consultantRequest.getAddress(),
                 consultantRequest.getDob(),
                 consultantRequest.getNic(),
                 consultantRequest.getGender(),
+                consultantRequest.getJob_type(),
                 user.orElse(new User())
         );
         return consultantRepository.save(consultant);

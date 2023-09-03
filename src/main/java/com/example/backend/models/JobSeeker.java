@@ -10,7 +10,7 @@ import java.util.Optional;
 @Entity
 @Table(name = "job_seekers",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "tp"),
+                @UniqueConstraint(columnNames = "contact_number"),
                 @UniqueConstraint(columnNames = "nic")
         })
 public class JobSeeker {
@@ -18,12 +18,19 @@ public class JobSeeker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
+    @Size(max = 255)
+    private String first_name;
+    @NotBlank
+    @Size(max = 255)
+    private String last_name;
+    @NotBlank
     @Size(max = 15)
-    private String tp;
+    private String contact_number;
     @NotBlank
     @Size(max = 255)
     private String address;
     @NotBlank
+    @Size(max = 255)
     private String dob;
     @NotBlank
     @Size(max = 12)
@@ -31,20 +38,26 @@ public class JobSeeker {
     @NotBlank
     @Size(max = 10)
     private String  gender;
+    @NotBlank
+    @Size(max = 255)
+    private String  job_type;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    public JobSeeker(String tp, String address, String dob, String nic, String gender, User user) {
-        this.tp = tp;
+
+    public JobSeeker(String first_name, String last_name, String contact_number, String address, String dob, String nic, String gender, String job_type, User user) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.contact_number = contact_number;
         this.address = address;
         this.dob = dob;
         this.nic = nic;
         this.gender = gender;
+        this.job_type = job_type;
         this.user = user;
     }
 
     public JobSeeker() {
-
     }
 
     public Long getId() {
@@ -55,12 +68,28 @@ public class JobSeeker {
         this.id = id;
     }
 
-    public String getTp() {
-        return tp;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setTp(String tp) {
-        this.tp = tp;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getContact_number() {
+        return contact_number;
+    }
+
+    public void setContact_number(String contact_number) {
+        this.contact_number = contact_number;
     }
 
     public String getAddress() {
@@ -93,6 +122,14 @@ public class JobSeeker {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getJob_type() {
+        return job_type;
+    }
+
+    public void setJob_type(String job_type) {
+        this.job_type = job_type;
     }
 
     public User getUser() {
