@@ -41,6 +41,12 @@ public class ConsultantController {
 
         return consultantRepository.findAll();
     }
+    @GetMapping("/profile/{cid}")
+    @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
+    public Optional<Consultant> profile(@PathVariable Integer cid) {
+
+        return consultantRepository.findById(Long.valueOf(cid));
+    }
     @PostMapping("/save")
     @PreAuthorize("hasRole('CONSULTANT')")
     public Object save(HttpServletRequest request , @RequestBody ConsultantRequest consultantRequest){

@@ -43,6 +43,12 @@ public class AvailableDateController {
     UserRepository userRepository;
     @Autowired
     ConsultantRepository consultantRepository;
+    @GetMapping("/consultant/{cid}")
+    @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
+    public List<AvailableDate> all(@PathVariable Integer cid) {
+
+        return availableDateRepository.findByConsultantId(Long.valueOf(cid));
+    }
     @PostMapping("/save")
     @PreAuthorize("hasRole('CONSULTANT')")
     public ResponseEntity<String> save(HttpServletRequest request , @RequestBody List<AvailableDateRequest> availableDateRequest) {
