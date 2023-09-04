@@ -1,10 +1,8 @@
 package com.example.backend.controllers;
 
 import com.example.backend.models.Consultant;
-import com.example.backend.models.JobSeeker;
 import com.example.backend.models.User;
 import com.example.backend.payload.request.ConsultantRequest;
-import com.example.backend.payload.request.JobSeekerRequest;
 import com.example.backend.repository.ConsultantRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.jwt.JwtUtils;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,6 +34,12 @@ public class ConsultantController {
     public Object dashboard(HttpServletRequest request) {
 
         return null;
+    }
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
+    public List<Consultant> all(HttpServletRequest request) {
+
+        return consultantRepository.findAll();
     }
     @PostMapping("/save")
     @PreAuthorize("hasRole('CONSULTANT')")
