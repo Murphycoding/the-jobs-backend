@@ -14,4 +14,10 @@ public class AvailableDateRequest {
     private String start_time;
     @NotBlank
     private String end_time;
+
+    public AvailableDateRequest(String date, String start_time, String end_time) {
+        this.date = date;
+        this.start_time = start_time;
+        this.end_time = end_time;
+    }
 }

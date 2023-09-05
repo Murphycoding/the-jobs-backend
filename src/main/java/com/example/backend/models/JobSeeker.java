@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.lang.String;
-import java.util.Optional;
-
 @Entity
 @Table(name = "job_seekers",
         uniqueConstraints = {
@@ -34,13 +31,13 @@ public class JobSeeker {
     private String dob;
     @NotBlank
     @Size(max = 12)
-    private String  nic;
+    private String nic;
     @NotBlank
     @Size(max = 10)
-    private String  gender;
+    private String gender;
     @NotBlank
     @Size(max = 255)
-    private String  job_type;
+    private String job_type;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

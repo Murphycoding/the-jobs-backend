@@ -6,9 +6,9 @@ import com.example.backend.models.User;
 import com.example.backend.payload.request.JobSeekerRequest;
 import com.example.backend.repository.JobSeekerRepository;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.security.jwt.JwtUtils;
 import com.example.backend.security.services.UserDetailsImpl;
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import com.example.backend.sevice.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/job-seeker")
 public class JobSeekerController {
+
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtService jwtService;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -34,8 +35,8 @@ public class JobSeekerController {
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('jOB_SEEKER')")
     public Object dashboard(HttpServletRequest request) {
-        String token = jwtUtils.getJwtFromCookies(request);
-        String username = jwtUtils.getUserNameFromJwtToken(token);
+        String token = jwtService.getJwtFromCookies(request);
+        String username = jwtService.getUserNameFromJwtToken(token);
         Optional<User> user = userRepository.findByUsername(username);
         Optional<JobSeeker> jobSeeker = jobSeekerRepository.findByUser(user.orElse(new User()));
         return jobSeeker;
@@ -43,8 +44,8 @@ public class JobSeekerController {
     @PostMapping("/save")
     @PreAuthorize("hasRole('jOB_SEEKER')")
     public Object save(HttpServletRequest request , @RequestBody JobSeekerRequest jobSeekerRequest){
-        String token = jwtUtils.getJwtFromCookies(request);
-        String username = jwtUtils.getUserNameFromJwtToken(token);
+        String token = jwtService.getJwtFromCookies(request);
+        String username = jwtService.getUserNameFromJwtToken(token);
         Optional<User> user = userRepository.findByUsername(username);
 
         JobSeeker jobSeeker = new JobSeeker(

@@ -7,8 +7,9 @@ import com.example.backend.payload.request.AvailableDateRequest;
 import com.example.backend.repository.AvailableDateRepository;
 import com.example.backend.repository.ConsultantRepository;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.security.jwt.JwtUtils;
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import com.example.backend.sevice.JwtService;
+import com.example.backend.sevice.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,26 +36,37 @@ public class AvailableDateController {
     AvailableDateRepository availableDateRepository;
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtService jwtService;
+
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
+
     @Autowired
     ConsultantRepository consultantRepository;
+
     @GetMapping("/consultant/{cid}")
     @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
     public List<AvailableDate> all(@PathVariable Integer cid) {
 
         return availableDateRepository.findByConsultantId(Long.valueOf(cid));
     }
+
     @PostMapping("/save")
     @PreAuthorize("hasRole('CONSULTANT')")
-    public ResponseEntity<String> save(HttpServletRequest request , @RequestBody List<AvailableDateRequest> availableDateRequest) {
-        String token = jwtUtils.getJwtFromCookies(request);
-        String username = jwtUtils.getUserNameFromJwtToken(token);
-        Optional<User> user = userRepository.findByUsername(username);
+    public ResponseEntity<String> save(HttpServletRequest request, @RequestBody List<AvailableDateRequest> availableDateRequest) {
+        // String token = jwtUtils.getJwtFromCookies(request);
+        String token = jwtService.getJwtFromCookies(request);
+
+        System.err.println("save err");
+        String username = jwtService.getUserNameFromJwtToken(token);
+        // Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userService.findUserByUsername(username);
         Optional<Consultant> consultant = consultantRepository.findByUser(user.orElse(new User()));
 
 //        return  consultant;

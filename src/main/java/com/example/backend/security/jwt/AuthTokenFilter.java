@@ -1,6 +1,7 @@
 package com.example.backend.security.jwt;
 
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import com.example.backend.sevice.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,8 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
+
   @Autowired
-  private JwtUtils jwtUtils;
+  private JwtService jwtService;
 
   @Autowired
   private UserDetailsServiceImpl userDetailsService;
@@ -30,8 +32,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       String jwt = parseJwt(request);
-      if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+      if (jwt != null && jwtService.validateJwtToken(jwt)) {
+        String username = jwtService.getUserNameFromJwtToken(jwt);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         
@@ -52,7 +54,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   }
 
   private String parseJwt(HttpServletRequest request) {
-    String jwt = jwtUtils.getJwtFromCookies(request);
+    String jwt = jwtService.getJwtFromCookies(request);
     return jwt;
   }
 }

@@ -4,9 +4,9 @@ import com.example.backend.models.Consultant;
 import com.example.backend.models.User;
 import com.example.backend.payload.request.ConsultantRequest;
 import com.example.backend.repository.ConsultantRepository;
-import com.example.backend.repository.UserRepository;
-import com.example.backend.security.jwt.JwtUtils;
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import com.example.backend.sevice.JwtService;
+import com.example.backend.sevice.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,13 +19,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/consultant")
 public class ConsultantController {
+
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtService jwtService;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
+
     @Autowired
     ConsultantRepository consultantRepository;
 
@@ -35,25 +37,30 @@ public class ConsultantController {
 
         return null;
     }
+
     @GetMapping("/all")
     @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
     public List<Consultant> all(HttpServletRequest request) {
 
         return consultantRepository.findAll();
     }
+
     @GetMapping("/profile/{cid}")
     @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
     public Optional<Consultant> profile(@PathVariable Integer cid) {
 
         return consultantRepository.findById(Long.valueOf(cid));
     }
+
     @PostMapping("/save")
     @PreAuthorize("hasRole('CONSULTANT')")
-    public Object save(HttpServletRequest request , @RequestBody ConsultantRequest consultantRequest){
+    public Object save(HttpServletRequest request, @RequestBody ConsultantRequest consultantRequest) {
 
-        String token = jwtUtils.getJwtFromCookies(request);
-        String username = jwtUtils.getUserNameFromJwtToken(token);
-        Optional<User> user = userRepository.findByUsername(username);
+        String token = jwtService.getJwtFromCookies(request);
+        System.out.println(token);
+        String username = jwtService.getUserNameFromJwtToken(token);
+        System.out.println(username);
+        Optional<User> user = userService.findUserByUsername(username);
 
         Consultant consultant = new Consultant(
                 consultantRequest.getSpecialized_area(),
