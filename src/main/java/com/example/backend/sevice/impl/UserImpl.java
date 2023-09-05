@@ -20,4 +20,20 @@ public class UserImpl implements UserService {
 
         return userOptional;
     }
+
+    @Override
+    public Boolean existsByUsername(String username){
+        return userRepository.existsByUsername(username);
+
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public User save(User user){
+        return  userRepository.save(user);
+    }
 }

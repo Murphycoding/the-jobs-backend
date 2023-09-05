@@ -11,6 +11,7 @@ import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.services.UserDetailsImpl;
 import com.example.backend.sevice.JwtService;
+import com.example.backend.sevice.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +39,7 @@ public class AuthController {
   AuthenticationManager authenticationManager;
 
   @Autowired
-  UserRepository userRepository;
+  UserService userService;
 
   @Autowired
   RoleRepository roleRepository;
@@ -78,11 +79,11 @@ public class AuthController {
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    if (userService.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
     }
 
-    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+    if (userService.existsByEmail(signUpRequest.getEmail())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     }
 
@@ -116,7 +117,7 @@ public class AuthController {
     }
 
     user.setRoles(roles);
-    userRepository.save(user);
+    userService.save(user);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
