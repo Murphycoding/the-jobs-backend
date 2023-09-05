@@ -49,7 +49,14 @@ public class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("sajiyabro@gmail.com"));
         // Add more assertions as needed
     }
-
+    @Test
+    public void testRegisterUserSuccess() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/signup")
+                        .content("{\"username\": \"testuser\", \"email\": \"test@example.com\", \"password\": \"password\", \"role\": [\"job_seeker\"]}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("{\"message\":\"User registered successfully!\"}"));
+    }
     // Utility method to convert an object to JSON string
     private static String asJsonString(final Object obj) {
         try {
