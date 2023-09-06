@@ -10,6 +10,7 @@ import com.example.backend.security.services.UserDetailsImpl;
 import com.example.backend.security.services.UserDetailsServiceImpl;
 import com.example.backend.sevice.JobSeekerService;
 import com.example.backend.sevice.JwtService;
+import com.example.backend.sevice.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class JobSeekerController {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     JobSeekerService jobSeekerService;
@@ -39,7 +40,7 @@ public class JobSeekerController {
     public Object dashboard(HttpServletRequest request) {
         String token = jwtService.getJwtFromCookies(request);
         String username = jwtService.getUserNameFromJwtToken(token);
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userService.findByUsername(username);
         Optional<JobSeeker> jobSeeker = jobSeekerService.findByUser(user.orElse(new User()));
         return jobSeeker;
     }
@@ -48,7 +49,7 @@ public class JobSeekerController {
     public Object save(HttpServletRequest request , @RequestBody JobSeekerRequest jobSeekerRequest){
         String token = jwtService.getJwtFromCookies(request);
         String username = jwtService.getUserNameFromJwtToken(token);
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userService.findByUsername(username);
 
         JobSeeker jobSeeker = new JobSeeker(
                 jobSeekerRequest.getFirst_name(),
