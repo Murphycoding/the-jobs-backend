@@ -5,6 +5,7 @@ import com.example.backend.models.User;
 import com.example.backend.payload.request.ConsultantRequest;
 import com.example.backend.repository.ConsultantRepository;
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import com.example.backend.sevice.ConsultantService;
 import com.example.backend.sevice.JwtService;
 import com.example.backend.sevice.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public class ConsultantController {
     UserService userService;
 
     @Autowired
-    ConsultantRepository consultantRepository;
+    ConsultantService consultantService;
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('CONSULTANT')")
@@ -42,14 +43,14 @@ public class ConsultantController {
     @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
     public List<Consultant> all(HttpServletRequest request) {
 
-        return consultantRepository.findAll();
+        return consultantService.findAll();
     }
 
     @GetMapping("/profile/{cid}")
     @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
     public Optional<Consultant> profile(@PathVariable Integer cid) {
 
-        return consultantRepository.findById(Long.valueOf(cid));
+        return consultantService.findById(Long.valueOf(cid));
     }
 
     @PostMapping("/save")
@@ -75,7 +76,7 @@ public class ConsultantController {
                 consultantRequest.getJob_type(),
                 user.orElse(new User())
         );
-        return consultantRepository.save(consultant);
+        return consultantService.save(consultant);
     }
 
 }
