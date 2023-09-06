@@ -8,6 +8,7 @@ import com.example.backend.repository.JobSeekerRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.security.services.UserDetailsImpl;
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import com.example.backend.sevice.JobSeekerService;
 import com.example.backend.sevice.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -30,15 +31,16 @@ public class JobSeekerController {
 
     @Autowired
     UserRepository userRepository;
+
     @Autowired
-    JobSeekerRepository jobSeekerRepository;
+    JobSeekerService jobSeekerService;
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('jOB_SEEKER')")
     public Object dashboard(HttpServletRequest request) {
         String token = jwtService.getJwtFromCookies(request);
         String username = jwtService.getUserNameFromJwtToken(token);
         Optional<User> user = userRepository.findByUsername(username);
-        Optional<JobSeeker> jobSeeker = jobSeekerRepository.findByUser(user.orElse(new User()));
+        Optional<JobSeeker> jobSeeker = jobSeekerService.findByUser(user.orElse(new User()));
         return jobSeeker;
     }
     @PostMapping("/save")
@@ -61,6 +63,6 @@ public class JobSeekerController {
         );
 //        return "work";
 
-        return jobSeekerRepository.save(jobSeeker);
+        return jobSeekerService.save(jobSeeker);
     }
 }
