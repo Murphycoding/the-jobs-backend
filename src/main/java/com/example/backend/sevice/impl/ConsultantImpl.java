@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class ConsultantImpl implements ConsultantService {
     @Autowired
-    ConsultantRepository consultantRepository;
+    private ConsultantRepository consultantRepository;
     @Override
     public Consultant save(Consultant consultant){
         return consultantRepository.save(consultant);
