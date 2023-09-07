@@ -3,7 +3,6 @@ package com.example.backend.sevice.impl;
 import com.example.backend.models.JobSeeker;
 import com.example.backend.models.User;
 import com.example.backend.repository.JobSeekerRepository;
-import com.example.backend.repository.UserRepository;
 import com.example.backend.sevice.JobSeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class JobSeekerImpl implements JobSeekerService {
         return  jobSeekerRepository.save(jobSeeker);
     }
     @Override
-    public Optional<JobSeeker> findByUser(User user){
-        return  jobSeekerRepository.findByUser(user);
+    public Optional<JobSeeker> findByUser(Optional<User> user){
+        return  jobSeekerRepository.findByUser(user.orElse(new User()));
     }
 }

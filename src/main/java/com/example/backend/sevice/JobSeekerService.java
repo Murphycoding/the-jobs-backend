@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface JobSeekerService {
     JobSeeker save(JobSeeker jobSeeker);
-    Optional<JobSeeker> findByUser(User user);
+    Optional<JobSeeker> findByUser(Optional<User> user);
 }

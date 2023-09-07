@@ -42,13 +42,13 @@ public class AvailableDateController {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ConsultantRepository consultantRepository;
+    private ConsultantRepository consultantRepository;
 
     @GetMapping("/consultant/{cid}")
     @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")

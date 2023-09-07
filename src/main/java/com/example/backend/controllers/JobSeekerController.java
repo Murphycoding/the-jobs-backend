@@ -41,7 +41,7 @@ public class JobSeekerController {
         String token = jwtService.getJwtFromCookies(request);
         String username = jwtService.getUserNameFromJwtToken(token);
         Optional<User> user = userService.findByUsername(username);
-        Optional<JobSeeker> jobSeeker = jobSeekerService.findByUser(user.orElse(new User()));
+        Optional<JobSeeker> jobSeeker = jobSeekerService.findByUser(user);
         return jobSeeker;
     }
     @PostMapping("/save")

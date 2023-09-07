@@ -15,7 +15,7 @@ public class Appointment {
     @NotBlank
     @Size(max = 10)
     private String  status;
-    @NotBlank
+
     private Date accepted_at;
 
     @OneToOne
@@ -24,4 +24,43 @@ public class Appointment {
     @OneToOne
     @JoinColumn(name = "job_seeker_id")
     private JobSeeker jobSeeker;
+
+    public Appointment(String status, Date accepted_at, Consultant consultant, JobSeeker jobSeeker) {
+        this.status = status;
+        this.accepted_at = accepted_at;
+        this.consultant = consultant;
+        this.jobSeeker = jobSeeker;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getAccepted_at() {
+        return accepted_at;
+    }
+
+    public void setAccepted_at(Date accepted_at) {
+        this.accepted_at = accepted_at;
+    }
+
+    public Consultant getConsultant() {
+        return consultant;
+    }
+
+    public void setConsultant(Consultant consultant) {
+        this.consultant = consultant;
+    }
+
+    public JobSeeker getJobSeeker() {
+        return jobSeeker;
+    }
+
+    public void setJobSeeker(JobSeeker jobSeeker) {
+        this.jobSeeker = jobSeeker;
+    }
 }

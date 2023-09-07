@@ -10,6 +10,7 @@ import com.example.backend.sevice.JwtService;
 import com.example.backend.sevice.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,6 +78,37 @@ public class ConsultantController {
                 user.orElse(new User())
         );
         return consultantService.save(consultant);
+    }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> update(@RequestBody ConsultantRequest consultantRequest, @PathVariable Integer id)
+    {
+        System.out.println("0");
+        Optional<Consultant> oldData = consultantService.findById(Long.valueOf(id));
+
+        if (oldData.isPresent()) {
+            Consultant existingConsultant = oldData.get();
+            Consultant updatedConsultant = consultantService.update(existingConsultant, consultantRequest);
+
+            return ResponseEntity.ok(updatedConsultant);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> delete(@PathVariable Integer id)
+    {
+        Optional<Consultant> consultant = consultantService.findById(Long.valueOf(id));
+
+        if (consultant.isPresent()) {
+            consultantService.delete(Long.valueOf(id));
+            return ResponseEntity.ok("delete successfully");
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

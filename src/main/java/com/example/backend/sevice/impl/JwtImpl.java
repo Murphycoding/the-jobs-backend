@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
+import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -42,15 +43,20 @@ public class JwtImpl implements JwtService {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(48 * 60 * 60).httpOnly(true).build();
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(48 * 60 * 60 * 60).httpOnly(true).build();
         return cookie;
     }
 
     private String generateTokenFromUsername(String username) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.YEAR, 1);
+
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+//                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(calendar.getTime())
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
