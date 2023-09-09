@@ -1,9 +1,11 @@
 package com.example.backend.sevice.impl;
 
+import com.example.backend.models.AvailableDate;
 import com.example.backend.models.Consultant;
 import com.example.backend.models.User;
 import com.example.backend.payload.request.ConsultantRequest;
 import com.example.backend.repository.ConsultantRepository;
+import com.example.backend.sevice.AvailableDateService;
 import com.example.backend.sevice.ConsultantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.Optional;
 public class ConsultantImpl implements ConsultantService {
     @Autowired
     private ConsultantRepository consultantRepository;
+    @Autowired
+    private AvailableDateService availableDateService;
     @Override
     public Consultant save(Consultant consultant){
         return consultantRepository.save(consultant);
@@ -29,24 +33,27 @@ public class ConsultantImpl implements ConsultantService {
     }
     @Override
     public Consultant update(Consultant existingConsultant, ConsultantRequest consultantRequest) {
+//        return existingConsultant;
         // Update the existing Consultant entity with the data from consultantRequest
-        existingConsultant.setAddress(consultantRequest.getAddress());
-        existingConsultant.setDob(consultantRequest.getDob());
-        existingConsultant.setGender(consultantRequest.getGender());
-        existingConsultant.setContact_number(consultantRequest.getContact_number());
-        existingConsultant.setNic(consultantRequest.getNic());
+//        existingConsultant.setAddress(consultantRequest.getAddress());
+//        existingConsultant.setDob(consultantRequest.getDob());
+//        existingConsultant.setGender(consultantRequest.getGender());
+//        existingConsultant.setContact_number(consultantRequest.getContact_number());
+//        existingConsultant.setNic(consultantRequest.getNic());
         existingConsultant.setFirst_name(consultantRequest.getFirst_name());
         existingConsultant.setLast_name(consultantRequest.getLast_name());
         existingConsultant.setSpecialized_area(consultantRequest.getSpecialized_area());
         existingConsultant.setSpecialized_country(consultantRequest.getSpecialized_country());
         // Update other properties as needed
-
+//return existingConsultant;
         // Save the updated Consultant in the repository
         return consultantRepository.save(existingConsultant);
     }
     @Override
     public void delete(Long id){
-         consultantRepository.deleteById(id);
+        List<AvailableDate> list = availableDateService.findByConsultantId(id);
+        availableDateService.deleteAll(list);
+        consultantRepository.deleteById(id);
     }
     @Override
     public Optional<Consultant> findByUser(Optional<User> user){

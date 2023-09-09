@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.models.Appointment;
 import com.example.backend.models.Consultant;
 import com.example.backend.models.JobSeeker;
 import com.example.backend.models.User;
@@ -34,7 +35,27 @@ public class AppointmentController {
 
     @Autowired
     private JobSeekerService jobSeekerService;
+    @GetMapping("/job-seeker")
+    @PreAuthorize("hasRole('jOB_SEEKER')")
+    public Object allJobSeeker(HttpServletRequest request) {
+        String token = jwtService.getJwtFromCookies(request);
+        String username = jwtService.getUserNameFromJwtToken(token);
+        Optional<User> user = userService.findUserByUsername(username);
+        Optional<JobSeeker> job_seeker = jobSeekerService.findByUser(user);
+        return appointmentService.findByJobSeeker(job_seeker.orElse(new JobSeeker()));
+//        return job_seeker;
+    }
 
+    @GetMapping("/consultant")
+    @PreAuthorize("hasRole('CONSULTANT')")
+    public Object allConsultant(HttpServletRequest request) {
+        String token = jwtService.getJwtFromCookies(request);
+        String username = jwtService.getUserNameFromJwtToken(token);
+        Optional<User> user = userService.findUserByUsername(username);
+        Optional<Consultant> consultant = consultantService.findByUser(user);
+        return appointmentService.findByConsultant(consultant.orElse(new Consultant()));
+//        return job_seeker;
+    }
     @PostMapping("/save")
     @PreAuthorize("hasRole('jOB_SEEKER')")
     public Object save(HttpServletRequest request, @RequestBody IdRequest idRequest) {
@@ -46,5 +67,12 @@ public class AppointmentController {
         Optional<Consultant> consultant = consultantService.findById(Long.valueOf(idRequest.getId()));
 
         return appointmentService.save(consultant.orElse(new Consultant()),job_seeker.orElse(new JobSeeker()));
+    }
+    @PostMapping("/accepted")
+    @PreAuthorize("hasRole('CONSULTANT')")
+    public Object accepted(@RequestBody IdRequest idRequest) {
+        Optional<Appointment> appointment = appointmentService.findById(Long.parseLong(idRequest.getId()));
+        return appointmentService.accepted(appointment.orElse(new Appointment()));
+//        return job_seeker;
     }
 }

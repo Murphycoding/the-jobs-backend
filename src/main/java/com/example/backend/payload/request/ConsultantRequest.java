@@ -24,8 +24,6 @@ public class ConsultantRequest {
     private String nic;
     @NotBlank
     private String gender;
-    @NotBlank
-    private String job_type;
 
     public String getSpecialized_area() {
         return specialized_area;
@@ -97,13 +95,5 @@ public class ConsultantRequest {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getJob_type() {
-        return job_type;
-    }
-
-    public void setJob_type(String job_type) {
-        this.job_type = job_type;
     }
 }

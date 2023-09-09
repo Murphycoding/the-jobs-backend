@@ -3,8 +3,8 @@ package com.example.backend.controllers;
 import com.example.backend.models.Consultant;
 import com.example.backend.models.User;
 import com.example.backend.payload.request.ConsultantRequest;
-import com.example.backend.repository.ConsultantRepository;
 import com.example.backend.security.services.UserDetailsServiceImpl;
+import com.example.backend.sevice.AvailableDateService;
 import com.example.backend.sevice.ConsultantService;
 import com.example.backend.sevice.JwtService;
 import com.example.backend.sevice.UserService;
@@ -32,23 +32,28 @@ public class ConsultantController {
 
     @Autowired
     ConsultantService consultantService;
+    @Autowired
+    AvailableDateService availableDateService;
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('CONSULTANT')")
     public Object dashboard(HttpServletRequest request) {
-
-        return null;
+        String token = jwtService.getJwtFromCookies(request);
+        String username = jwtService.getUserNameFromJwtToken(token);
+        Optional<User> user = userService.findByUsername(username);
+        Optional<Consultant> consultant = consultantService.findByUser(user);
+        return consultant;
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
+    @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER') or hasRole('jOB_ADMIN')")
     public List<Consultant> all(HttpServletRequest request) {
 
         return consultantService.findAll();
     }
 
     @GetMapping("/profile/{cid}")
-    @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER')")
+    @PreAuthorize("hasRole('CONSULTANT') or hasRole('jOB_SEEKER') or hasRole('jOB_ADMIN')")
     public Optional<Consultant> profile(@PathVariable Integer cid) {
 
         return consultantService.findById(Long.valueOf(cid));
@@ -74,7 +79,6 @@ public class ConsultantController {
                 consultantRequest.getDob(),
                 consultantRequest.getNic(),
                 consultantRequest.getGender(),
-                consultantRequest.getJob_type(),
                 user.orElse(new User())
         );
         return consultantService.save(consultant);
@@ -82,13 +86,15 @@ public class ConsultantController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> update(@RequestBody ConsultantRequest consultantRequest, @PathVariable Integer id)
+    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody ConsultantRequest consultantRequest)
     {
+//        return consultantRequest;
         System.out.println("0");
         Optional<Consultant> oldData = consultantService.findById(Long.valueOf(id));
 
         if (oldData.isPresent()) {
             Consultant existingConsultant = oldData.get();
+//            return ResponseEntity.ok(existingConsultant);
             Consultant updatedConsultant = consultantService.update(existingConsultant, consultantRequest);
 
             return ResponseEntity.ok(updatedConsultant);

@@ -46,9 +46,6 @@ public class Consultant {
     @NotBlank
     @Size(max = 10)
     private String  gender;
-    @NotBlank
-    @Size(max = 255)
-    private String  job_type;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -56,7 +53,7 @@ public class Consultant {
     public Consultant() {
     }
 
-    public Consultant(String specialized_area, String specialized_country, String first_name, String last_name, String contact_number, String address, String dob, String nic, String gender, String job_type, User user) {
+    public Consultant(String specialized_area, String specialized_country, String first_name, String last_name, String contact_number, String address, String dob, String nic, String gender, User user) {
         this.specialized_area = specialized_area;
         this.specialized_country = specialized_country;
         this.first_name = first_name;
@@ -66,7 +63,6 @@ public class Consultant {
         this.dob = dob;
         this.nic = nic;
         this.gender = gender;
-        this.job_type = job_type;
         this.user = user;
     }
 
@@ -148,14 +144,6 @@ public class Consultant {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getJob_type() {
-        return job_type;
-    }
-
-    public void setJob_type(String job_type) {
-        this.job_type = job_type;
     }
 
     public User getUser() {
